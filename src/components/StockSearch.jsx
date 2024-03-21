@@ -6,7 +6,6 @@ import CompanyProfile from './common/Tables/CompanyProfile';
 import PriceChange from './common/Tables/PriceChange';
 import MostlyOwnedStocksTable from './common/Tables/MostlyOwnedStocksTable';
 import CompanyNews from './CompanyNews';
-import 'chartjs-plugin-zoom';
 
 ChartJS.register(
     CategoryScale,
@@ -20,7 +19,7 @@ ChartJS.register(
     Filler
 );
 
-const apiKey3 = import.meta.env.VITE_API_KEY_FMP_3; // Netlify ENV variable
+const apiKey3 = import.meta.env.VITE_API_KEY_FMP_1; // Netlify ENV variable
 const apiKeyNews = import.meta.env.VITE_API_KEY_POLYGON_2; // Netlify ENV variable
 
 const StockSearch = (props) => {
@@ -51,8 +50,8 @@ const StockSearch = (props) => {
 
         (today.getDay() === 0 || today.getDay() === 1) ? startDate.setDate(today.getDate() - 2) : startDate.setDate(today.getDate() - 1)
 
-        const todayFormatted = formatDate(today);
-        const startDateFormatted = formatDate(startDate);
+        let todayFormatted = formatDate(today);
+        let startDateFormatted = formatDate(startDate);
 
         const baseUrl = "https://financialmodelingprep.com/api/v3/";
 
@@ -78,6 +77,21 @@ const StockSearch = (props) => {
             setSearchResults(data);
             setPriceChange(dataPC);
 
+            const searchedStocks = JSON.parse(localStorage.getItem('searchedStocks')) || [];
+            const stockInfo = {
+                symbol: query,
+                name: data[0].companyName,
+            };
+            const existingIndex = searchedStocks.findIndex(stock => stock.symbol === query);
+            if (existingIndex !== -1) {
+                // If the symbol exists, remove it from its current position
+                searchedStocks.splice(existingIndex, 1);
+            }
+
+            searchedStocks.unshift(stockInfo); // Add the new search to the beginning of the array
+            searchedStocks.splice(10); // Keep only the last 10 searches
+            localStorage.setItem('searchedStocks', JSON.stringify(searchedStocks));
+
         } catch (error) {
             setError('An error occurred while fetching data');
         } finally {
@@ -89,7 +103,7 @@ const StockSearch = (props) => {
             // https://financialmodelingprep.com/api/v3/historical-chart/1hour/AAPL?from=2023-08-10&to=2023-09-10&apikey={APIKEY}
             // 1min, 5min, 15min, 30min, 1hour, 4hour
 
-            const endPoint = `${baseUrl}historical-chart/5min/${query}?from=${startDateFormatted}&to=${todayFormatted}&apikey=${apiKey3}`; // [PROD] Start Fetch Stock Historical Chart Data
+            const endPoint = `${baseUrl}historical-chart/15min/${query}?from=${startDateFormatted}&to=${todayFormatted}&apikey=${apiKey3}`; // [PROD] Start Fetch Stock Historical Chart Data
             const responseCHART = await fetch(endPoint);
 
             if (!responseCHART.ok) {
@@ -109,6 +123,10 @@ const StockSearch = (props) => {
             setQuery('');
         }
         // End Fetch Stock Historical Chart Data
+    };
+
+    const handleReload = () => {
+        window.location.reload();  // Reload the current route
     };
 
     const handleKeyDown = event => {
@@ -143,21 +161,6 @@ const StockSearch = (props) => {
 
     const options = {
         plugins: {
-            zoom: {
-                zoom: {
-                    wheel: {
-                        enabled: true,
-                    },
-                    pinch: {
-                        enabled: true,
-                    },
-                    mode: 'x',
-                },
-                pan: {
-                    enabled: true,
-                    mode: 'x',
-                },
-            },
             legend: {
                 labels: {
                     color: labelColor
@@ -186,7 +189,7 @@ const StockSearch = (props) => {
     return (
         <div className='mb-4'>
             <form onSubmit={handleSubmit} className='searchForm mb-4 m-auto'>
-                <div className="input-group mb-2"><h2 className='fs-4 pe-2 mb-0'>Investment Search</h2>
+                <div className="input-group mb-0"><h2 className='fs-4 pe-2 mb-0'>Investment Search</h2>
                     <input
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
@@ -206,8 +209,10 @@ const StockSearch = (props) => {
                 </div>
             }
             {error && <p className='text-center'>{error}</p>}
-
-            <div className='row reverse-col-mobile'>
+            {
+                !loading && searchResults.length > 0 && <div><small className="btn-link text-secondary" role='button' onClick={handleReload}>Clear Search Result</small></div>
+            }
+            <div className='row'>
                 <div className='col-lg-4'>
                     {!loading && searchResults.length > 0 && (
                         <div className='mb-4'>

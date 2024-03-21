@@ -29,6 +29,10 @@ body,
   background-color: var(--primary-color) !important;
 }
 
+.btn.bg-secondary-color:hover{
+  opacity: 0.8;
+}
+
 .bg-secondary-color {
   background-color: var(--secondary-color) !important;
 }
@@ -184,6 +188,15 @@ canvas {
   height: auto !important;
 }
 
+.pie canvas{
+  max-height: 400px;
+}
+
+.lightMode .pie canvas {
+  background-color: #f2f2f2;
+}
+
+
 /* News */
 
 .news .card {
@@ -233,7 +246,7 @@ canvas {
   position: fixed;
   right: 0;
   width: 65px;
-  top: 10px;
+  top: 15px;
   z-index: 10000;
 }
 
@@ -244,11 +257,6 @@ i.bi.bi-list {
 
 .lightMode .bi.bi-list {
   color: var(--primary-color);
-}
-
-.navbar-brand img {
-  margin-bottom: -30px;
-  margin-top: -30px;
 }
 
 .lightMode .navbar {
@@ -367,7 +375,7 @@ i.bi.bi-list {
 }
 
 footer {
-  background-color: #f2f2f2;
+  background-color: #fff;
 }
 
 .darkMode footer {
@@ -388,6 +396,37 @@ footer {
   background-position: bottom;
 }
 
+.wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: marquee 130s linear infinite;
+}
+
+.marquee li{
+  width: 120px;
+}
+
+.darkMode .btn-outline-success{
+  color: #0ee682 !important;
+  border-color: #0ee682 !important;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @media (max-width: 576px) {
   .reverse-col-mobile > .row {
     flex-direction: column-reverse;
@@ -400,9 +439,7 @@ footer {
   .tab-content {
     font-size: smaller;
   }
-
-  .tab-content .inv{
-    border-width: 0 !important;
+  .portfolio-stat .fs-3{
+    font-size: 1rem !important;
   }
-
 }
