@@ -46,18 +46,18 @@ const TradingPosition = () => {
 
     return (
         <>
-            <div className="table-responsive">
-                <h2 className='fs-4'>Trading Positions</h2>
+            <h2 className='fs-4'>Trading Positions</h2>
+            <div className="table-responsive mb-4">
                 <table className='table table-striped mb-0 w-100'>
                     <thead>
                         <tr>
-                            <th className='bg-primary-color text-white fs-6'>ASSET</th>
-                            <th className='bg-primary-color text-white fs-6'>QTY</th>
-                            <th className='bg-primary-color text-white fs-6 text-end' style={{ whiteSpace: 'nowrap' }}>AVG. ENTRY PRICE</th>
-                            <th className='bg-primary-color text-white fs-6 text-end' style={{ whiteSpace: 'nowrap' }}>CURRENT PRICE</th>
-                            <th className='bg-primary-color text-white fs-6 text-end' style={{ whiteSpace: 'nowrap' }}>MARKET VALUE</th>
-                            <th className='bg-primary-color text-white fs-6 text-end' style={{ whiteSpace: 'nowrap' }}>P/L ($)</th>
-                            <th className='bg-primary-color text-white fs-6 text-end' style={{ whiteSpace: 'nowrap' }}>P/L (%)</th>
+                            <th className='bg-primary-color text-white fw-normal'>ASSET</th>
+                            <th className='bg-primary-color text-white fw-normal'>QTY</th>
+                            <th className='bg-primary-color text-white fw-normal text-end text-nowrap'>AVG. ENTRY PRICE</th>
+                            <th className='bg-primary-color text-white fw-normal text-end text-nowrap'>CURRENT PRICE</th>
+                            <th className='bg-primary-color text-white fw-normal text-end text-nowrap'>MARKET VALUE</th>
+                            <th className='bg-primary-color text-white fw-normal text-end text-nowrap'>P/L ($)</th>
+                            <th className='bg-primary-color text-white fw-normal text-end text-nowrap'>P/L (%)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,8 +68,8 @@ const TradingPosition = () => {
                                 <td className='text-end'>{formatCurrency('USD', position.avg_entry_price)}</td>
                                 <td className='text-end'>{formatCurrency('USD', position.current_price)}</td>
                                 <td className='text-end'>{formatCurrency('USD', position.market_value)}</td>
-                                <td className={position.unrealized_pl > 0 ? 'text-success text-end' : 'text-danger text-end'} style={{ whiteSpace: 'nowrap' }}>{formatCurrency('USD', position.unrealized_pl)}</td>
-                                <td className={position.unrealized_pl > 0 ? 'text-success text-end' : 'text-danger text-end'} style={{ whiteSpace: 'nowrap' }}>
+                                <td className={`text-nowrap text-end ${position.unrealized_pl > 0 ? 'text-success' : 'text-danger'}`}>{formatCurrency('USD', position.unrealized_pl)}</td>
+                                <td className={`text-nowrap text-end ${position.unrealized_pl > 0 ? 'text-success' : 'text-danger'}`}>
                                     {(position.unrealized_plpc * 100).toFixed(2)}%
                                     {position.unrealized_pl > 0 ? <i className="bi bi-arrow-up-short text-success"></i> : <i className="bi bi-arrow-down-short text-danger"></i>}
                                 </td>
